@@ -1,0 +1,6 @@
+Toujours travailler dans le repository, puis importer dans le service, puis dans le controller
+
+Ouvrir docker dekstop
+la db se trouve à droite sur intellij ou sur mysqlwb
+Faire un composer up -d pour lancer le container,
+Faire un composer down -v quand il y a des changements et qu'ils ne persistent pas
