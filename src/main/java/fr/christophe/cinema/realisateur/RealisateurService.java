@@ -1,5 +1,6 @@
 package fr.christophe.cinema.realisateur;
 
+import fr.christophe.cinema.acteur.Acteur;
 import fr.christophe.cinema.film.Film;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,22 +17,8 @@ public class RealisateurService {
         this.realisateurRepository = realisateurRepository;
     }
 
-    public Realisateur findByNom(String nom) {
-        return realisateurRepository.findByNom(nom).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Realisateur non trouvé avec le nom " + nom
-                )
-        );
-    }
-
-    public Realisateur findByPrenom(String prenom) {
-        return realisateurRepository.findByPrenom(prenom).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Realisateur non trouvé avec le prénom " + prenom
-                )
-        );
+    public Realisateur save(Realisateur realisateur) {
+        return realisateurRepository.save(realisateur);
     }
 
     public List<Realisateur> findAll() {
@@ -47,15 +34,30 @@ public class RealisateurService {
         );
     }
 
-    public Realisateur save(Realisateur realisateur) {
-        return realisateurRepository.save(realisateur);
-    }
-
     public Realisateur update(Realisateur realisateur) {
         return realisateurRepository.save(realisateur);
     }
 
     public void deleteById(Integer id) {
-        realisateurRepository.deleteById(id);
+        Realisateur realisateur = this.findById(id);
+        realisateurRepository.delete(realisateur);
+    }
+
+    public List<Realisateur> findByNom(String nom) {
+        return realisateurRepository.findAllByNom(nom).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Realisateur non trouvé avec le nom " + nom
+                )
+        );
+    }
+
+    public List<Realisateur> findByPrenom(String prenom) {
+        return realisateurRepository.findAllByPrenom(prenom).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Realisateur non trouvé avec le prénom " + prenom
+                )
+        );
     }
 }

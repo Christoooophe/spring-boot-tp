@@ -14,30 +14,11 @@ public class ActeurService {
         this.acteurRepository = acteurRepository;
     }
 
-    public Acteur findByNom(String nom) {
-        return acteurRepository.findByNom(nom).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Aucun acteur avec le nom : " + nom
-                )
-        );
-    }
-
-    public Acteur findByPrenom(String prenom) {
-        return acteurRepository.findByPrenom(prenom).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Aucun acteur avec le prenom : " + prenom
-                )
-        );
-    }
-
-    public List<Acteur> findAll() {
-        return acteurRepository.findAll();
-    }
-
     public Acteur save(Acteur acteur) {
         return acteurRepository.save(acteur);
+    }
+    public List<Acteur> findAll() {
+        return acteurRepository.findAll();
     }
 
     public Acteur findById(Integer id) {
@@ -56,5 +37,23 @@ public class ActeurService {
     public void deleteById(Integer id) {
         Acteur acteur = this.findById(id);
         acteurRepository.delete(acteur);
+    }
+
+    public List<Acteur> findByNom(String nom) {
+        return acteurRepository.findAllByNom(nom).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun acteur avec le nom : " + nom
+                )
+        );
+    }
+
+    public List<Acteur> findByPrenom(String prenom) {
+        return acteurRepository.findAllByPrenom(prenom).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun acteur avec le prenom : " + prenom
+                )
+        );
     }
 }

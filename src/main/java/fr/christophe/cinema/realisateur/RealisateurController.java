@@ -13,12 +13,10 @@ public class RealisateurController {
         this.realisateurService = realisateurService;
     }
 
-    public Realisateur findByNom(String nom) {
-        return realisateurService.findByNom(nom);
-    }
-
-    public Realisateur findByPrenom(String prenom) {
-        return realisateurService.findByPrenom(prenom);
+    // Ok
+    @PostMapping
+    public Realisateur save(@RequestBody Realisateur realisateur) {
+        return realisateurService.save(realisateur);
     }
 
     // Ok
@@ -34,17 +32,26 @@ public class RealisateurController {
     }
 
     // Ok
-    @PostMapping
-    public Realisateur save(@RequestBody Realisateur realisateur) {
-        return realisateurService.save(realisateur);
-    }
-
-    // Ok
-    public Realisateur update(Realisateur realisateur) {
+    @PutMapping
+    public Realisateur update(@RequestBody Realisateur realisateur) {
         return realisateurService.update(realisateur);
     }
 
-    public void deleteById(Integer id) {
+    // Ok
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Integer id) {
         realisateurService.deleteById(id);
+    }
+
+    // Ok
+    @GetMapping("/search")
+    public List<Realisateur> findByNom(@RequestParam String nom) {
+        return realisateurService.findByNom(nom);
+    }
+
+    // Ok
+    @GetMapping("/searchprenom")
+    public List<Realisateur> findByPrenom(@RequestParam String prenom) {
+        return realisateurService.findByPrenom(prenom);
     }
 }
