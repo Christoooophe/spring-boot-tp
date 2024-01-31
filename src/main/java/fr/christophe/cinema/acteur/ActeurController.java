@@ -1,5 +1,8 @@
 package fr.christophe.cinema.acteur;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.christophe.cinema.acteur.dto.ActeurReduitDto;
+import fr.christophe.cinema.acteur.dto.ActeurSansFilmDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,8 +12,11 @@ import java.util.List;
 public class ActeurController {
     private final ActeurService acteurService;
 
-    public ActeurController(ActeurService acteurService) {
+    private final ObjectMapper objectMapper;
+
+    public ActeurController(ActeurService acteurService, ObjectMapper objectMapper) {
         this.acteurService = acteurService;
+        this.objectMapper = objectMapper;
     }
 
     // Ok
@@ -21,14 +27,17 @@ public class ActeurController {
 
     // Ok
     @GetMapping
-    public List<Acteur> findAll() {
-        return acteurService.findAll();
+    public List<ActeurSansFilmDto> findAll() {
+        return acteurService.findAll().stream().map(
+                acteur -> objectMapper.convertValue(acteur, ActeurSansFilmDto.class)
+        ).toList();
     }
 
     // Ok
     @GetMapping("/{id}")
-    public Acteur findById(@PathVariable Integer id) {
-        return acteurService.findById(id);
+    public ActeurReduitDto findById(@PathVariable Integer id) {
+        Acteur acteur = acteurService.findById(id);
+        return objectMapper.convertValue(acteur, ActeurReduitDto.class);
     }
 
     // Ok

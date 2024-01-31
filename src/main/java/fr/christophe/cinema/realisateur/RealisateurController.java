@@ -1,16 +1,27 @@
 package fr.christophe.cinema.realisateur;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.christophe.cinema.acteur.Acteur;
+import fr.christophe.cinema.acteur.dto.ActeurSansFilmsEtIdDto;
+import fr.christophe.cinema.film.Film;
+import fr.christophe.cinema.film.dto.FilmReduitDto;
+import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
+import fr.christophe.cinema.film.dto.FilmVraimentReduitDto;
+import fr.christophe.cinema.realisateur.dto.RealisateurCompletDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/realisateur")
+@RequestMapping("/realisateurs")
 public class RealisateurController {
     private final RealisateurService realisateurService;
 
-    public RealisateurController(RealisateurService realisateurService) {
+    private final ObjectMapper objectMapper;
+
+    public RealisateurController(RealisateurService realisateurService, ObjectMapper objectMapper) {
         this.realisateurService = realisateurService;
+        this.objectMapper = objectMapper;
     }
 
     // Ok
@@ -27,11 +38,17 @@ public class RealisateurController {
 
     // Ok
     @GetMapping("/{id}")
-    public Realisateur findById(@PathVariable Integer id) {
-        return realisateurService.findById(id);
+    public RealisateurCompletDto findById(@PathVariable Integer id) {
+        return realisateurService.findAllByRealisateurId(id);
     }
 
-    // Ok
+    @GetMapping("/{id}/films")
+    public List<FilmTitreDureeSortieDto> findAllFilmsByReal(@PathVariable Integer id) {
+        return realisateurService.findAllFilmsRealisateur(id).stream().map(
+                film -> objectMapper.convertValue(film, FilmTitreDureeSortieDto.class)
+        ).toList();
+    }
+
     @PutMapping
     public Realisateur update(@RequestBody Realisateur realisateur) {
         return realisateurService.update(realisateur);

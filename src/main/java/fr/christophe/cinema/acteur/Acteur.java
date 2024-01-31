@@ -1,5 +1,7 @@
 package fr.christophe.cinema.acteur;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.christophe.cinema.film.Film;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,6 +15,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Acteur {
     @Id
     @GeneratedValue
@@ -22,9 +28,6 @@ public class Acteur {
 
     private String prenom;
 
-    @ManyToMany(
-            mappedBy = "acteurs",
-            cascade = CascadeType.PERSIST
-    ) //Le acteurs est récupéré dans FILM
+    @ManyToMany(mappedBy = "acteurs") //Le acteurs est récupéré dans FILM
     private List<Film> films = new ArrayList<>();
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "film") //par défaut il prendrait le nom de l'entité
+@Table(name = "film")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
@@ -41,11 +41,11 @@ public class Film {
     @Column(length = 500)
     private String synopsis;
 
-    @ManyToOne(cascade = CascadeType.ALL)  //one réalisateur, many films
+    @ManyToOne//one réalisateur, many films
     @JoinColumn(name = "realisateur_id")
     private Realisateur realisateur;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
             name = "acteur_film",
             joinColumns = @JoinColumn(name = "film_id"),

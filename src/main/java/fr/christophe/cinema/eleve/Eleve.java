@@ -14,6 +14,6 @@ public class Eleve {
     @GeneratedValue
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL) // Pour lui dire de supprimer le carnet de note à la suppression de l'élève
+    @OneToOne // Pour lui dire de supprimer le carnet de note à la suppression de l'élève
     private CarnetDeNotes carnetDeNotes;
 }

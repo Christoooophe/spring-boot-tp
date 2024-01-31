@@ -1,5 +1,13 @@
 package fr.christophe.cinema.film;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.christophe.cinema.acteur.Acteur;
+import fr.christophe.cinema.acteur.dto.ActeurSansFilmsEtIdDto;
+import fr.christophe.cinema.film.dto.FilmCompletDto;
+import fr.christophe.cinema.film.dto.FilmReduitDto;
+import fr.christophe.cinema.realisateur.Realisateur;
+import fr.christophe.cinema.realisateur.dto.RealisateurCompletDto;
+import fr.christophe.cinema.realisateur.dto.RealisateurReduitDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -11,14 +19,33 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    public FilmController(FilmService filmService) {
+    private final ObjectMapper objectMapper;
+
+    public FilmController(FilmService filmService, ObjectMapper objectMapper) {
         this.filmService = filmService;
+        this.objectMapper = objectMapper;
+    }
+
+    @GetMapping("/{id}/acteurs")
+    public List<ActeurSansFilmsEtIdDto> findAllActors(@PathVariable Integer id) {
+        List<Acteur> film = filmService.findAllActorsByFilmId(id);
+        return film.stream().map(
+                acteur -> objectMapper.convertValue(acteur, ActeurSansFilmsEtIdDto.class)
+        ).toList();
+    }
+
+    @GetMapping("/{id}/realisateur")
+    public RealisateurReduitDto findRealisateur(@PathVariable Integer id) {
+        Realisateur realisateur = filmService.findRealisateur(id);
+        return objectMapper.convertValue(realisateur, RealisateurReduitDto.class);
     }
 
 
     @GetMapping
-    public List<Film> findAll(){
-        return filmService.findAll();
+    public List<FilmReduitDto> findAll(){
+        return filmService.findAll().stream().map(
+                film -> objectMapper.convertValue(film, FilmReduitDto.class)
+        ).toList();
     }
 
     // Surtout pas oublier le requestBody
@@ -28,8 +55,9 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film findById(@PathVariable Integer id) {
-        return filmService.findById(id);
+    public FilmCompletDto findById(@PathVariable Integer id) {
+        Film film = filmService.findById(id);
+        return objectMapper.convertValue(film, FilmCompletDto.class);
     }
 
     @DeleteMapping("/{id}")

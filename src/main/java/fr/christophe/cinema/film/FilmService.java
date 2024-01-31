@@ -1,5 +1,8 @@
 package fr.christophe.cinema.film;
 
+import fr.christophe.cinema.acteur.Acteur;
+import fr.christophe.cinema.acteur.ActeurService;
+import fr.christophe.cinema.realisateur.Realisateur;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,8 +14,10 @@ import java.util.List;
 public class FilmService {
     private final FilmRepository filmRepository;
 
-    public FilmService(FilmRepository filmRepository) {
+    private final ActeurService acteurService;
+    public FilmService(FilmRepository filmRepository, ActeurService acteurService) {
         this.filmRepository = filmRepository;
+        this.acteurService = acteurService;
     }
 
     public List<Film> findAll() {
@@ -59,4 +64,26 @@ public class FilmService {
                 )
         );
     }
+
+    public List<Film> findAllByRealisateurId(Integer id) {
+        return filmRepository.findAllByRealisateurId(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Il n'y a aucun film"
+                )
+        );
+    }
+
+    public List<Acteur> findAllActorsByFilmId(Integer id) {
+        return filmRepository.findById(id).get().getActeurs();
+    }
+
+    public Realisateur findRealisateur(Integer id) {
+        return filmRepository.findById(id).get().getRealisateur();
+    }
+
+//    public Film addActeur(Integer id) {
+//        Acteur acteur = acteurService.findById(id);
+//        Film
+//    }
 }
