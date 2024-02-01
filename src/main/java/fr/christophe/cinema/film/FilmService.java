@@ -1,7 +1,12 @@
 package fr.christophe.cinema.film;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.christophe.cinema.acteur.Acteur;
 import fr.christophe.cinema.acteur.ActeurService;
+import fr.christophe.cinema.acteur.dto.ActeurReduitDto;
+import fr.christophe.cinema.acteur.dto.ActeurSansFilmDto;
+import fr.christophe.cinema.film.dto.FilmCompletDto;
+import fr.christophe.cinema.film.dto.FilmIdTitreSortieActeurRealDto;
 import fr.christophe.cinema.realisateur.Realisateur;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,9 +20,13 @@ public class FilmService {
     private final FilmRepository filmRepository;
 
     private final ActeurService acteurService;
-    public FilmService(FilmRepository filmRepository, ActeurService acteurService) {
+
+    private final ObjectMapper objectMapper;
+
+    public FilmService(FilmRepository filmRepository, ActeurService acteurService, ObjectMapper objectMapper) {
         this.filmRepository = filmRepository;
         this.acteurService = acteurService;
+        this.objectMapper = objectMapper;
     }
 
     public List<Film> findAll() {
@@ -82,8 +91,19 @@ public class FilmService {
         return filmRepository.findById(id).get().getRealisateur();
     }
 
-//    public Film addActeur(Integer id) {
-//        Acteur acteur = acteurService.findById(id);
-//        Film
-//    }
+    public FilmIdTitreSortieActeurRealDto addActeurInFilmById(Integer id, Acteur acteur) {
+        Acteur acteurAjoute = acteurService.findById(acteur.getId());
+        Film film = this.findById(id);
+        film.getActeurs().add(acteurAjoute);
+        this.save(film);
+        FilmIdTitreSortieActeurRealDto filmIdTitreSortieActeurRealDto = new FilmIdTitreSortieActeurRealDto();
+        filmIdTitreSortieActeurRealDto.setTitre(film.getTitre());
+        filmIdTitreSortieActeurRealDto.setRealisateur(film.getRealisateur());
+        filmIdTitreSortieActeurRealDto.setDateSortie(film.getDateSortie());
+        filmIdTitreSortieActeurRealDto.setId(film.getId());
+        filmIdTitreSortieActeurRealDto.setActeurs(film.getActeurs().stream().map(
+                acteurListe -> objectMapper.convertValue(acteurListe, ActeurSansFilmDto.class)
+        ).toList());
+        return filmIdTitreSortieActeurRealDto;
+    }
 }

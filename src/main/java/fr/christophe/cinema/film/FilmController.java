@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.christophe.cinema.acteur.Acteur;
 import fr.christophe.cinema.acteur.dto.ActeurSansFilmsEtIdDto;
 import fr.christophe.cinema.film.dto.FilmCompletDto;
+import fr.christophe.cinema.film.dto.FilmIdTitreSortieActeurRealDto;
 import fr.christophe.cinema.film.dto.FilmReduitDto;
 import fr.christophe.cinema.realisateur.Realisateur;
 import fr.christophe.cinema.realisateur.dto.RealisateurCompletDto;
@@ -46,6 +47,11 @@ public class FilmController {
         return filmService.findAll().stream().map(
                 film -> objectMapper.convertValue(film, FilmReduitDto.class)
         ).toList();
+    }
+
+    @PostMapping("/{id}/acteurs")
+    public FilmIdTitreSortieActeurRealDto addActeurs(@PathVariable Integer id, @RequestBody Acteur acteur){
+        return filmService.addActeurInFilmById(id, acteur);
     }
 
     // Surtout pas oublier le requestBody

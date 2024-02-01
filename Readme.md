@@ -4,6 +4,7 @@
 ![built-with-docker.svg](assets%2Fbuilt-with-docker.svg)
 ![built-with-java.svg](assets%2Fbuilt-with-java.svg)
 ![built-with-intellij-idea.svg](assets%2Fbuilt-with-intellij-idea.svg)
+
 Ce projet vous permet de récupérer des acteurs, des films, des réalisateurs...
 
 Vous pouvez aussi mettre à jour les films, acteurs, réalisateurs, les supprimer ou les ajouter
@@ -27,15 +28,7 @@ Une fois ceci fait, lancer le projet java via votre ide
 ## Stacks :
 
 
-<img src="assets/java.png" alt="java">
-<img src="assets/plus-symbole-noir.png" width="16" style="margin: 10px">
-<img src="assets/1200px-Spring_Framework_Logo_2018.png" width="100" height="25" alt="spring boot">
-<img src="assets/plus-symbole-noir.png" width="16" style="margin: 10px">
-<img src="assets/docker.png" alt="docker">
-<img src="assets/plus-symbole-noir.png" width="16" style="margin: 10px">
-<img src="assets/lombok-java-supported.png" width="50" height="75" alt="lombok">
-<img src="assets/plus-symbole-noir.png" width="16" style="margin: 10px">
-<img src="assets/maven.png" width="100" alt="maven jpa" style="margin: 10px">
+<img src="assets/java.png" alt="java" style="margin: 10px"><img src="assets/1200px-Spring_Framework_Logo_2018.png" width="100" height="25" alt="spring boot" style="margin: 10px"><img src="assets/docker.png" alt="docker" style="margin: 10px"><img src="assets/lombok-java-supported.png" width="50" height="75" alt="lombok" style="margin: 10px"><img src="assets/maven.png" width="100" alt="maven jpa" style="margin: 10px" style="margin: 10px">
 
 ## Exemples de requêtes :
 
@@ -150,7 +143,47 @@ http://localhost:8080/realisateurs/1
 }
 ````
 ---
+http://localhost:8080/films/1/acteurs
 
+Body : 
+
+````json
+{
+    "id": 102,
+    "nom": "Hanks",
+    "prenom": "Tom"
+}
+````
+Réponse :
+````json
+{
+    "id": 1,
+    "titre": "Star Wars",
+    "dateSortie": "1977-05-25",
+    "realisateur": {
+        "id": 1,
+        "nom": "Norris",
+        "prenom": "Chuck"
+    },
+    "acteurs": [
+        {
+            "id": 1,
+            "nom": "Norris",
+            "prenom": "Chuck"
+        },
+        {
+            "id": 52,
+            "nom": "L'Éponge",
+            "prenom": "Bob"
+        },
+        {
+            "id": 102,
+            "nom": "Hanks",
+            "prenom": "Tom"
+        }
+    ]
+}
+````
 ## Contributing
 
 Si vous souhaitez contribuer, vous pouvez faire une PR.
