@@ -7,12 +7,15 @@ import fr.christophe.cinema.acteur.dto.ActeurReduitDto;
 import fr.christophe.cinema.acteur.dto.ActeurSansFilmDto;
 import fr.christophe.cinema.film.dto.FilmCompletDto;
 import fr.christophe.cinema.film.dto.FilmIdTitreSortieActeurRealDto;
+import fr.christophe.cinema.film.exceptions.BadRequestException;
+import fr.christophe.cinema.film.exceptions.FilmNotFoundException;
 import fr.christophe.cinema.realisateur.Realisateur;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,16 +37,33 @@ public class FilmService {
     }
 
     public Film save(Film film) {
+        verifyFilms(film);
         return filmRepository.save(film);
+    }
+
+    private static void verifyFilms(Film film) {
+        List<String> erreurs = new ArrayList<>();
+        if (film.getTitre() == null) {
+            erreurs.add("Le titre est obligatoire");
+        }
+
+        if (film.getDateSortie() == null) {
+            erreurs.add("La date de sortie est obligatoire");
+        }
+
+        if (film.getRealisateur() == null) {
+            erreurs.add("Il faut un réalisateur");
+        }
+
+        if (!erreurs.isEmpty()) {
+            throw new BadRequestException(erreurs);
+        }
     }
 
     // Si on n'a rien, on rejette un throw
     public Film findById(Integer id) {
         return filmRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Film non trouvé"
-                )
+                () -> new FilmNotFoundException(id)
         );
     }
 
@@ -91,11 +111,22 @@ public class FilmService {
         return filmRepository.findById(id).get().getRealisateur();
     }
 
+    /**
+     * On récupère un id de film et un acteur
+     * L'id du film nous permet de récupérer le film en question. On récupère aussi l'acteur ajouté
+     * On ajoute l'acteur au film puis on transforme le film en filmDto pour ne pas tout récupérer
+     * @param id
+     * @param acteur
+     * @return FilmIdTitreSortieActeurRealDto
+     */
     public FilmIdTitreSortieActeurRealDto addActeurInFilmById(Integer id, Acteur acteur) {
         Acteur acteurAjoute = acteurService.findById(acteur.getId());
         Film film = this.findById(id);
         film.getActeurs().add(acteurAjoute);
+
+        // Ne surtout pas l'oublier !
         this.save(film);
+
         FilmIdTitreSortieActeurRealDto filmIdTitreSortieActeurRealDto = new FilmIdTitreSortieActeurRealDto();
         filmIdTitreSortieActeurRealDto.setTitre(film.getTitre());
         filmIdTitreSortieActeurRealDto.setRealisateur(film.getRealisateur());

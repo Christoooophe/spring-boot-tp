@@ -8,6 +8,7 @@ import fr.christophe.cinema.film.dto.FilmReduitDto;
 import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
 import fr.christophe.cinema.film.dto.FilmVraimentReduitDto;
 import fr.christophe.cinema.realisateur.dto.RealisateurCompletDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class RealisateurController {
 
     // Ok
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Realisateur save(@RequestBody Realisateur realisateur) {
         return realisateurService.save(realisateur);
     }

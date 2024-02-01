@@ -3,6 +3,7 @@ package fr.christophe.cinema.acteur;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.christophe.cinema.acteur.dto.ActeurReduitDto;
 import fr.christophe.cinema.acteur.dto.ActeurSansFilmDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ActeurController {
 
     // Ok
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Acteur save(@RequestBody Acteur acteur) {
         return acteurService.save(acteur);
     }

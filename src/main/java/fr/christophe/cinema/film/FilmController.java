@@ -9,6 +9,7 @@ import fr.christophe.cinema.film.dto.FilmReduitDto;
 import fr.christophe.cinema.realisateur.Realisateur;
 import fr.christophe.cinema.realisateur.dto.RealisateurCompletDto;
 import fr.christophe.cinema.realisateur.dto.RealisateurReduitDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -56,6 +57,7 @@ public class FilmController {
 
     // Surtout pas oublier le requestBody
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Film save(@RequestBody Film film) {
         return filmService.save(film);
     }
