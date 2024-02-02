@@ -6,4 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+    Optional<List<Ticket>> findAllBySeanceId(Long id);
 }

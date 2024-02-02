@@ -5,6 +5,7 @@ import fr.christophe.cinema.film.FilmService;
 import fr.christophe.cinema.salle.Salle;
 import fr.christophe.cinema.salle.SalleService;
 import fr.christophe.cinema.seance.dto.SeanceAvecTicketsDto;
+import fr.christophe.cinema.seance.dto.SeanceFilmReduitDto;
 import fr.christophe.cinema.ticket.Ticket;
 import fr.christophe.cinema.ticket.TicketService;
 import org.springframework.http.HttpStatus;
@@ -76,4 +77,10 @@ public class SeanceService {
         seanceRepository.delete(seance);
     }
 
+    public SeanceAvecTicketsDto findAllBySeanceId(Long id){
+        Seance seance = this.findById(id);
+        SeanceAvecTicketsDto seanceAvecTicketsDto = new SeanceAvecTicketsDto();
+        seanceAvecTicketsDto.setId(seance.getId());
+        return seanceAvecTicketsDto;
+    }
 }

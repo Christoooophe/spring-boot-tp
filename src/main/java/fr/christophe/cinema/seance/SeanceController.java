@@ -2,6 +2,7 @@ package fr.christophe.cinema.seance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
+import fr.christophe.cinema.seance.dto.SeanceAvecTicketsDto;
 import fr.christophe.cinema.seance.dto.SeanceFilmReduitDto;
 import fr.christophe.cinema.ticket.Ticket;
 import fr.christophe.cinema.ticket.TicketService;
@@ -72,6 +73,13 @@ public class SeanceController {
         Seance seance = seanceService.findById(id);
         ticket.setSeance(seance);
         return ticketService.save(ticket);
+    }
+
+    @GetMapping("/{id}/tickets")
+    public SeanceAvecTicketsDto findBySeanceId(@PathVariable Long id){
+        SeanceAvecTicketsDto seanceAvecTicketsDto = seanceService.findAllBySeanceId(id);
+        seanceAvecTicketsDto.setTickets(ticketService.findAllBySeanceId(id));
+        return seanceAvecTicketsDto;
     }
 
 }

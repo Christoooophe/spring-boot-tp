@@ -73,4 +73,13 @@ public class TicketService {
         Ticket ticket = this.findById(id);
         ticketRepository.delete(ticket);
     }
+
+    public List<Ticket> findAllBySeanceId(Long id){
+        return ticketRepository.findAllBySeanceId(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Il n'y a aucun ticket"
+                )
+        );
+    }
 }
