@@ -1,8 +1,7 @@
 package fr.christophe.cinema.ticket;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import fr.christophe.cinema.seance.Seance;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,4 +19,8 @@ public class Ticket {
     private String nomClient;
 
     private int nombrePlaces;
+
+    @ManyToOne
+    @JoinColumn(name = "seance_id")
+    private Seance seance;
 }

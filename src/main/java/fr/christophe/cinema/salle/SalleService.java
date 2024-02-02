@@ -22,7 +22,7 @@ public class SalleService {
         return salleRepository.save(salle);
     }
 
-    public Salle findById(Integer id) {
+    public Salle findById(Long id) {
         return salleRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -35,7 +35,7 @@ public class SalleService {
         return salleRepository.save(salle);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         Salle salle = this.findById(id);
         salleRepository.delete(salle);
     }

@@ -1,8 +1,8 @@
 package fr.christophe.cinema.seance;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import fr.christophe.cinema.film.Film;
+import fr.christophe.cinema.salle.Salle;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,4 +23,12 @@ public class Seance {
     private int placeDisponibles;
 
     private float prix;
+
+    @ManyToOne
+    @JoinColumn(name = "salle_id")
+    private Salle salle;
+
+    @ManyToOne
+    @JoinColumn(name = "film_id")
+    private Film film;
 }

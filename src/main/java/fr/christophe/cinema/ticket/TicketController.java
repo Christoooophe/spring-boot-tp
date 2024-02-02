@@ -19,7 +19,7 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public Ticket findById(@PathVariable Integer id) {
+    public Ticket findById(@PathVariable Long id) {
         return ticketService.findById(id);
     }
 
@@ -33,7 +33,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         ticketService.deleteById(id);
     }
 }

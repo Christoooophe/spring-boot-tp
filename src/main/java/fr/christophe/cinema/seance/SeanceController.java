@@ -19,7 +19,7 @@ public class SeanceController {
     }
 
     @GetMapping("/{id}")
-    public Seance findById(@PathVariable Integer id) {
+    public Seance findById(@PathVariable Long id) {
         return seanceService.findById(id);
     }
 
@@ -34,7 +34,7 @@ public class SeanceController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         seanceService.deleteById(id);
     }
 }

@@ -19,7 +19,7 @@ public class SalleController {
     }
 
     @GetMapping("/{id}")
-    public Salle findById(@PathVariable Integer id) {
+    public Salle findById(@PathVariable Long id) {
         return salleService.findById(id);
     }
 
@@ -34,7 +34,7 @@ public class SalleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Long id) {
         salleService.deleteById(id);
     }
 }
