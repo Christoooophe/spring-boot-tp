@@ -1,6 +1,7 @@
 package fr.christophe.cinema.seance.dto;
 
 import fr.christophe.cinema.ticket.Ticket;
+import fr.christophe.cinema.ticket.dto.TicketsReduitDto;
 import lombok.Data;
 
 import java.util.ArrayList;

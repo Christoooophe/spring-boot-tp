@@ -6,9 +6,12 @@ import fr.christophe.cinema.seance.dto.SeanceAvecTicketsDto;
 import fr.christophe.cinema.seance.dto.SeanceFilmReduitDto;
 import fr.christophe.cinema.ticket.Ticket;
 import fr.christophe.cinema.ticket.TicketService;
+import fr.christophe.cinema.ticket.dto.TicketsReduitDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -82,4 +85,20 @@ public class SeanceController {
         return seanceAvecTicketsDto;
     }
 
+    // A reprendre pour mettre en forme les tickets
+//    @GetMapping("/{id}/tickets")
+//    public List<TicketsReduitDto> findBySeanceId(@PathVariable Long id){
+//        List<Ticket> tickets = ticketService.findAllBySeanceId(id);
+//        return tickets.stream().map(
+//                ticket -> objectMapper.convertValue(ticket, TicketsReduitDto.class)
+//        ).toList();
+//    }
+
+    @GetMapping("/disponible")
+    public List<SeanceFilmReduitDto> findAllSeanceAfterDate(@RequestParam LocalDateTime date){
+        List<Seance> seances = seanceService.findAllAfterDate(date);
+        return seances.stream().map(
+                seance -> objectMapper.convertValue(seance, SeanceFilmReduitDto.class)
+        ).toList();
+    }
 }

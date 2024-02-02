@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -82,5 +83,14 @@ public class SeanceService {
         SeanceAvecTicketsDto seanceAvecTicketsDto = new SeanceAvecTicketsDto();
         seanceAvecTicketsDto.setId(seance.getId());
         return seanceAvecTicketsDto;
+    }
+
+    public List<Seance> findAllAfterDate(LocalDateTime date){
+        return seanceRepository.findByDateAfter(date).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucune séance après cette date"
+                )
+        );
     }
 }
