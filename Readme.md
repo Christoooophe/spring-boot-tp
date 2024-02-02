@@ -185,6 +185,78 @@ Réponse :
     ]
 }
 ````
+---
+http://localhost:8080/seances/652
+
+````json
+{
+        "id": 652,
+        "date": "2028-10-01",
+        "placeDisponibles": 200,
+        "prix": 18.0,
+        "salle": {
+            "id": 102,
+            "numero": 5,
+            "capacite": 200
+        },
+        "film": {
+            "titre": "La bagarre, no rules",
+            "dateSortie": "1777-05-25",
+            "duree": 568
+        }
+    }
+````
+
+---
+
+Avant :
+````json
+{
+    "id": 902,
+    "date": "2029-10-01T20:00:00",
+    "placeDisponibles": 131,
+    "prix": 10.0,
+    "salle": {
+        "id": 1,
+        "numero": 1,
+        "capacite": 150
+    },
+    "film": {
+        "titre": "Star Wars",
+        "dateSortie": "1977-05-25",
+        "duree": 121
+    }
+}
+````
+
+````json
+{
+  "seance": {
+    "id": 902
+  },
+  "nomClient": "oui",
+  "nombrePlaces": 18
+}
+````
+Après :
+````json
+{
+    "id": 902,
+    "date": "2029-10-01T20:00:00",
+    "placeDisponibles": 113,
+    "prix": 10.0,
+    "salle": {
+        "id": 1,
+        "numero": 1,
+        "capacite": 150
+    },
+    "film": {
+        "titre": "Star Wars",
+        "dateSortie": "1977-05-25",
+        "duree": 121
+    }
+}
+````
 ## Contributing
 
 Si vous souhaitez contribuer, vous pouvez faire une PR.

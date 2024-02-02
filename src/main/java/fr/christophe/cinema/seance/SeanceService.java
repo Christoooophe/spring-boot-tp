@@ -1,15 +1,17 @@
 package fr.christophe.cinema.seance;
 
 import fr.christophe.cinema.film.Film;
+import fr.christophe.cinema.film.FilmService;
 import fr.christophe.cinema.salle.Salle;
-import fr.christophe.cinema.salle.SalleRepository;
 import fr.christophe.cinema.salle.SalleService;
+import fr.christophe.cinema.seance.dto.SeanceAvecTicketsDto;
+import fr.christophe.cinema.ticket.Ticket;
+import fr.christophe.cinema.ticket.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,10 +20,12 @@ public class SeanceService {
     private final SeanceRepository seanceRepository;
 
     private final SalleService salleService;
+    private final FilmService filmService;
 
-    public SeanceService(SeanceRepository seanceRepository, SalleService salleService) {
+    public SeanceService(SeanceRepository seanceRepository, SalleService salleService, FilmService filmService) {
         this.seanceRepository = seanceRepository;
         this.salleService = salleService;
+        this.filmService = filmService;
     }
 
     public List<Seance> findAll() {
@@ -31,34 +35,23 @@ public class SeanceService {
     public Seance save(Seance seance) {
         verificationSeance(seance);
         Salle salle = salleService.findById(seance.getSalle().getId());
+        Film film = filmService.findById(seance.getFilm().getId());
         seance.setPlaceDisponibles(salle.getCapacite());
-        return seanceRepository.save(seance);
+        Seance createdSeance = seanceRepository.save(seance);
+        return this.findById(createdSeance.getId());
     }
 
     private static void verificationSeance(Seance seance) {
-        if (!(seance.getSalle() instanceof Salle)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Aucune salle à cet id"
-            );
-        }
-
-        if (!(seance.getFilm() instanceof Film)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Aucun film à cet id"
-            );
-        }
         if (seance.getPrix() < 0){
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
                     "Le prix ne peut être négatif"
             );
         }
 
-        if (seance.getDate().isBefore(LocalDate.now())) {
+        if (seance.getDate().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
+                    HttpStatus.BAD_REQUEST,
                     "La date n'est pas bonne"
             );
         }

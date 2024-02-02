@@ -1,5 +1,6 @@
 package fr.christophe.cinema.ticket;
 
+import fr.christophe.cinema.seance.Seance;
 import fr.christophe.cinema.seance.SeanceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,34 +24,35 @@ public class TicketService {
     }
 
     public Ticket save(Ticket ticket) {
-        if (ticket.getSeance() == null) {
-            new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Ce ticket n'est pas relié à une séance"
+        Seance seance = seanceService.findById(ticket.getSeance().getId());
+        verify(ticket);
+
+        if (ticket.getNombrePlaces() > seance.getPlaceDisponibles()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Impossible de commander plus de billets que de places dans la séance"
             );
         }
 
-        if (ticket.getNombrePlaces() > ticket.getSeance().getPlaceDisponibles()) {
-            new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Plus assez de place"
-            );
-        }
+        seance.setPlaceDisponibles(seance.getPlaceDisponibles() - ticket.getNombrePlaces());
+        return ticketRepository.save(ticket);
+    }
+
+    private static void verify(Ticket ticket) {
 
         if (ticket.getNombrePlaces() < 0) {
-            new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
                     "Impossible de commander moins de 0 tickets"
             );
         }
 
-        if (ticket.getNomClient() == null) {
-            new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
+        if (ticket.getNomClient().isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
                     "Impossible de commander un ticket sans nom"
             );
         }
-        return ticketRepository.save(ticket);
     }
 
     public Ticket findById(Long id) {
@@ -63,6 +65,7 @@ public class TicketService {
     }
 
     public Ticket update(Ticket ticket) {
+        verify(ticket);
         return ticketRepository.save(ticket);
     }
 

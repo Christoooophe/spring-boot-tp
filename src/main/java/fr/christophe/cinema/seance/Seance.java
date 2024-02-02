@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,7 +21,7 @@ public class Seance {
     @GeneratedValue
     private Long id;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private int placeDisponibles;
 

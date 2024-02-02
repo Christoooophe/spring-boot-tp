@@ -6,13 +6,14 @@ import fr.christophe.cinema.salle.Salle;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class SeanceFilmReduitDto {
 
     private Long id;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private int placeDisponibles;
 

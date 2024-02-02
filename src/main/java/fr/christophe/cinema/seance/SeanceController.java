@@ -1,9 +1,10 @@
 package fr.christophe.cinema.seance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.christophe.cinema.film.dto.FilmCompletDto;
 import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
 import fr.christophe.cinema.seance.dto.SeanceFilmReduitDto;
+import fr.christophe.cinema.ticket.Ticket;
+import fr.christophe.cinema.ticket.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,11 @@ import java.util.List;
 public class SeanceController {
     private final SeanceService seanceService;
 
+    private final TicketService ticketService;
     private final ObjectMapper objectMapper;
-    public SeanceController(SeanceService seanceService, ObjectMapper objectMapper) {
+    public SeanceController(SeanceService seanceService, TicketService ticketService, ObjectMapper objectMapper) {
         this.seanceService = seanceService;
+        this.ticketService = ticketService;
         this.objectMapper = objectMapper;
     }
 
@@ -45,7 +48,7 @@ public class SeanceController {
         seanceFilmReduitDto.setId(seance.getId());
         seanceFilmReduitDto.setPrix(seance.getPrix());
         seanceFilmReduitDto.setFilm(filmTitreDureeSortieDto);
-        return objectMapper.convertValue(seance, SeanceFilmReduitDto.class);
+        return seanceFilmReduitDto;
     }
 
     @PostMapping
@@ -63,4 +66,12 @@ public class SeanceController {
     public void deleteById(@PathVariable Long id) {
         seanceService.deleteById(id);
     }
+
+    @PostMapping("/{id}/reserver")
+    public Ticket makeReservation(@PathVariable Long id, @RequestBody Ticket ticket){
+        Seance seance = seanceService.findById(id);
+        ticket.setSeance(seance);
+        return ticketService.save(ticket);
+    }
+
 }
