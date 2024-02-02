@@ -2,6 +2,7 @@ package fr.christophe.cinema.film;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.christophe.cinema.acteur.Acteur;
+import fr.christophe.cinema.acteur.dto.ActeurSansFilmDto;
 import fr.christophe.cinema.acteur.dto.ActeurSansFilmsEtIdDto;
 import fr.christophe.cinema.film.dto.FilmCompletDto;
 import fr.christophe.cinema.film.dto.FilmIdTitreSortieActeurRealDto;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,7 +67,17 @@ public class FilmController {
     @GetMapping("/{id}")
     public FilmCompletDto findById(@PathVariable Integer id) {
         Film film = filmService.findById(id);
-        return objectMapper.convertValue(film, FilmCompletDto.class);
+        FilmCompletDto filmCompletDto = new FilmCompletDto();
+        filmCompletDto.setActeurs(film.getActeurs().stream().map(
+                acteurSansFilmDto -> objectMapper.convertValue(acteurSansFilmDto, ActeurSansFilmDto.class)
+        ).toList());
+        filmCompletDto.setDateSortie(film.getDateSortie());
+        filmCompletDto.setDuree(film.getDuree());
+        filmCompletDto.setId(film.getId());
+        filmCompletDto.setTitre(film.getTitre());
+        filmCompletDto.setRealisateur(film.getRealisateur());
+        filmCompletDto.setSynopsis(film.getSynopsis());
+        return filmCompletDto;
     }
 
     @DeleteMapping("/{id}")

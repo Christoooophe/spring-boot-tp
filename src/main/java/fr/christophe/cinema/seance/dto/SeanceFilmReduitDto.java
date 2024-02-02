@@ -1,5 +1,6 @@
 package fr.christophe.cinema.seance.dto;
 
+import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
 import fr.christophe.cinema.film.dto.FilmTitreIdDateSortieDto;
 import fr.christophe.cinema.salle.Salle;
 import lombok.Data;
@@ -19,5 +20,5 @@ public class SeanceFilmReduitDto {
 
     private Salle salle;
 
-    private FilmTitreIdDateSortieDto film;
+    private FilmTitreDureeSortieDto film;
 }

@@ -1,5 +1,7 @@
 package fr.christophe.cinema.seance;
 
+import fr.christophe.cinema.film.Film;
+import fr.christophe.cinema.salle.Salle;
 import fr.christophe.cinema.salle.SalleRepository;
 import fr.christophe.cinema.salle.SalleService;
 import org.springframework.http.HttpStatus;
@@ -27,17 +29,30 @@ public class SeanceService {
     }
 
     public Seance save(Seance seance) {
-        if (seance == null && seance.getFilm() == null) {
+        verificationSeance(seance);
+        Salle salle = salleService.findById(seance.getSalle().getId());
+        seance.setPlaceDisponibles(salle.getCapacite());
+        return seanceRepository.save(seance);
+    }
+
+    private static void verificationSeance(Seance seance) {
+        if (!(seance.getSalle() instanceof Salle)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Aucun film ou aucune séance n'existe"
+                    "Aucune salle à cet id"
             );
         }
 
+        if (!(seance.getFilm() instanceof Film)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Aucun film à cet id"
+            );
+        }
         if (seance.getPrix() < 0){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Le prix ne peut être négatif" + "si deja"
+                    "Le prix ne peut être négatif"
             );
         }
 
@@ -47,10 +62,6 @@ public class SeanceService {
                     "La date n'est pas bonne"
             );
         }
-
-        seance.setPlaceDisponibles(salleService.findById(seance.getId()).getCapacite());
-
-        return seanceRepository.save(seance);
     }
 
     public Seance findById(Long id) {
@@ -63,6 +74,7 @@ public class SeanceService {
     }
 
     public Seance update(Seance seance) {
+        verificationSeance(seance);
         return seanceRepository.save(seance);
     }
 

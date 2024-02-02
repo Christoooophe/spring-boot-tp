@@ -1,5 +1,7 @@
 package fr.christophe.cinema.seance;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.christophe.cinema.film.Film;
 import fr.christophe.cinema.salle.Salle;
 import jakarta.persistence.*;
@@ -24,8 +26,7 @@ public class Seance {
 
     private float prix;
 
-    @ManyToOne
-    @JoinColumn(name = "salle_id")
+    @OneToOne
     private Salle salle;
 
     @ManyToOne

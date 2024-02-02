@@ -1,5 +1,10 @@
 package fr.christophe.cinema.seance;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.christophe.cinema.film.dto.FilmCompletDto;
+import fr.christophe.cinema.film.dto.FilmTitreDureeSortieDto;
+import fr.christophe.cinema.seance.dto.SeanceFilmReduitDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,21 +14,42 @@ import java.util.List;
 public class SeanceController {
     private final SeanceService seanceService;
 
-    public SeanceController(SeanceService seanceService) {
+    private final ObjectMapper objectMapper;
+    public SeanceController(SeanceService seanceService, ObjectMapper objectMapper) {
         this.seanceService = seanceService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
-    public List<Seance> findAll() {
-        return seanceService.findAll();
+    public List<SeanceFilmReduitDto> findAll() {
+        List<Seance> seances = seanceService.findAll();
+        return seances.stream().map(
+                seance -> objectMapper.convertValue(seance, SeanceFilmReduitDto.class)
+        ).toList();
     }
 
+    /**
+     * Méthode qui nous permet de passer d'une séance à une séance avec un film réduit pour que ce soit plus lisible
+     */
     @GetMapping("/{id}")
-    public Seance findById(@PathVariable Long id) {
-        return seanceService.findById(id);
+    public SeanceFilmReduitDto findById(@PathVariable Long id) {
+        Seance seance = seanceService.findById(id);
+        FilmTitreDureeSortieDto filmTitreDureeSortieDto = new FilmTitreDureeSortieDto();
+        filmTitreDureeSortieDto.setTitre(seance.getFilm().getTitre());
+        filmTitreDureeSortieDto.setDuree(seance.getFilm().getDuree());
+        filmTitreDureeSortieDto.setDateSortie(seance.getFilm().getDateSortie());
+        SeanceFilmReduitDto seanceFilmReduitDto = new SeanceFilmReduitDto();
+        seanceFilmReduitDto.setDate(seance.getDate());
+        seanceFilmReduitDto.setPlaceDisponibles(seance.getPlaceDisponibles());
+        seanceFilmReduitDto.setSalle(seance.getSalle());
+        seanceFilmReduitDto.setId(seance.getId());
+        seanceFilmReduitDto.setPrix(seance.getPrix());
+        seanceFilmReduitDto.setFilm(filmTitreDureeSortieDto);
+        return objectMapper.convertValue(seance, SeanceFilmReduitDto.class);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Seance save(@RequestBody Seance seance) {
         return seanceService.save(seance);
     }
